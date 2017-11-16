@@ -64,68 +64,6 @@ The `--privileged` flag gives the container almost the same privileges to the ho
 
 <sub>Based on the [Webnicer project](https://hub.docker.com/r/webnicer/protractor-headless/).</sub>
 
-## Run tests in CI   
-The project's Makefile contains several rules what you can use with your CI jobs. For example:
-```   
-   run-ci:
-   				./scripts/e2e-gui-test.sh
-```
-> As you can see here the project contains a predefined bash script to automate launch and test environment setup before tests execution.
-
-If you do not want to use Make, here is a code snippet that you can apply:
-```sh   
-   echo "Refresh the Test Runner Docker image"
-   docker pull hortonworks/docker-e2e-protractor
-   
-   export TEST_CONTAINER_NAME=gui-e2e
-   
-   echo "Checking stopped containers"
-   if [[ -n "$(docker ps -a -f status=exited -f status=dead -q)" ]]; then
-     echo "Delete stopped containers"
-     docker rm $(docker ps -a -f status=exited -f status=dead -q)
-   else
-     echo "There is no Exited or Dead container"
-   fi
-   
-   echo "Checking " $TEST_CONTAINER_NAME " container is running"
-   if [[ "$(docker inspect -f {{.State.Running}} $TEST_CONTAINER_NAME 2> /dev/null)" == "true" ]]; then
-     echo "Delete the running " $TEST_CONTAINER_NAME " container"
-     docker rm -f $TEST_CONTAINER_NAME
-   fi
-   
-   BASE_URL_RESPONSE=$(curl -k --write-out %{http_code} --silent --output /dev/null $BASE_URL/sl)
-   echo $BASE_URL " HTTP status code is: " $BASE_URL_RESPONSE
-   if [[ $BASE_URL_RESPONSE -ne 200 ]]; then
-       echo $BASE_URL " Web GUI is not accessible!"
-       RESULT=1
-   else
-       docker run -i \
-       --privileged \
-       --rm \
-       --name $TEST_CONTAINER_NAME \
-       --env-file $ENVFILE \
-       -v $(pwd):/protractor/project \
-       -v /dev/shm:/dev/shm \
-       hortonworks/docker-e2e-protractor e2e.conf.js --suite $TEST_SUITE
-       RESULT=$?
-   fi
-```
-
-## Makefile
-We created a very simple [Makefile](https://github.com/sequenceiq/docker-e2e-protractor/blob/master/Makefile) to be able build and run easily our Docker image:
-```
-make build
-```
-then
-```
-make run
-```
-or you can run the above commands in one round:
-```
-make all
-```
-The rules are same as in case of [To run your test cases in this image](#to-run-your-test-cases-in-this-image).
-
 ## In-memory File System /dev/shm (Linux only)
 Docker has hardcoded value of 64MB for `/dev/shm`. Error can be occurred, because of [page crash](https://bugs.chromium.org/p/chromedriver/issues/detail?id=1097) on memory intensive pages. The easiest way to mitigate the problem is share `/dev/shm` with the host.
 ```
