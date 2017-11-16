@@ -1,5 +1,5 @@
 FROM ubuntu:xenial
-MAINTAINER Hortonworks
+MAINTAINER TechDivision GmbH
 
 # Debian package configuration use the noninteractive frontend: It never interacts with the user at all, and makes the default answers be used for all questions.
 # http://manpages.ubuntu.com/manpages/wily/man7/debconf.7.html
@@ -62,7 +62,7 @@ RUN rm -fr /root/tmp
 # Jasmine and protractor global install
 # 2. Step to fixing the error for Node.js native addon build tool (node-gyp)
 # https://github.com/nodejs/node-gyp/issues/454
-RUN npm install --unsafe-perm --save-exact -g protractor@5.0.0 \
+RUN npm install --unsafe-perm --save-exact -g protractor@5.1.2 \
 # Get the latest Google Chrome driver
   && npm update \
 # Get the latest WebDriver Manager
@@ -82,11 +82,10 @@ RUN npm install --unsafe-perm -g \
 
 # Set the working directory
 WORKDIR /protractor/
-# Copy the run sript/s from local folder to the container's related folder
-COPY /scripts/run-e2e-tests.sh /entrypoint.sh
 # Set the HOME environment variable for the test project
 ENV HOME=/protractor/project
 # Set the file access permissions (read, write and access) recursively for the new folders
 RUN chmod -Rf 777 .
+RUN ln -s -f /bin/bash /bin/sh
 # Container entry point
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c"]
