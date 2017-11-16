@@ -6,15 +6,15 @@ The [Dockerfile](Dockerfile) was design based on the following projects:
 - [Protractor-Firefox-Headless-Docker](https://github.com/cfalguiere/Protractor-Firefox-Headless-Docker)
 
 # To run your test cases in this image
-1. Pull the `hortonworks/docker-e2e-protractor` image from [DockerHub](https://hub.docker.com/r/hortonworks/docker-e2e-protractor/)
+1. Pull the `techdivision/docker-e2e-protractor` image from [DockerHub](https://hub.docker.com/r/techdivision/docker-e2e-protractor/)
 2. If you have any environment variable which is used for your test project, provide here [environment file](utils/testenv).
 3. **The Protractor configuration file is vital for the Docker image**. Add your e2e test configuration JS file (for example `e2e.conf.js`). Beside this you can provide additional parameters here for protractor.
 4. You can see some example for execute your protractor tests in this [Docker](https://docs.docker.com/engine/installation/) container:
     ```
-    docker run -it --rm --name protractor-runner -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js    
-    docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite smoke
-    docker run -it --rm --name protractor-runner -e USERNAME=teszt.elek -e PASSWORD=Teszt12 -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite regression
-    docker run -it --rm --name protractor-runner --privileged --net=host -v /dev/shm:/dev/shm -v $(PWD):/protractor/project hortonworks/docker-e2e-protractor e2e.conf.js --suite smoke    
+    docker run -it --rm --name protractor-runner -v $(PWD):/protractor/project techdivision/docker-e2e-protractor e2e.conf.js    
+    docker run -it --rm --name protractor-runner --env-file utils/testenv -v $(PWD):/protractor/project techdivision/docker-e2e-protractor e2e.conf.js --suite smoke
+    docker run -it --rm --name protractor-runner -e USERNAME=teszt.elek -e PASSWORD=Teszt12 -v $(PWD):/protractor/project techdivision/docker-e2e-protractor e2e.conf.js --suite regression
+    docker run -it --rm --name protractor-runner --privileged --net=host -v /dev/shm:/dev/shm -v $(PWD):/protractor/project techdivision/docker-e2e-protractor e2e.conf.js --suite smoke    
     ```
 
   - `utils/testenv` the location (full path) of the `testenv` file on your machine. This file can contain environment variables for your new container.
