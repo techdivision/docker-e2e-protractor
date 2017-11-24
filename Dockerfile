@@ -87,5 +87,6 @@ WORKDIR /protractor/
 ENV HOME=/protractor/project
 # Set the file access permissions (read, write and access) recursively for the new folders
 RUN chmod -Rf 777 .
+RUN ln -s -f /bin/bash /bin/sh
 # Container entry point
 ENTRYPOINT ["/bin/bash", "-c"]
